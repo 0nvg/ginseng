@@ -30,7 +30,7 @@ async def kick(ctx, member : discord.Member, *, reason = None):
     if ctx.author.guild_permissions.ban_members:
         if member == ctx.author:
             emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini banlayamazsın")
-            await ctx.send(emb)
+            await ctx.send(embed = emb)
         else:
             if reason == None:
                 emb1 = discord.Embed(color=0x2f3136, type='rich', description = f":white_check_mark: {member.mention} sunucudan atıldı\n__sebep:__ belirtilmedi")
@@ -64,7 +64,7 @@ async def ban(ctx, member : discord.Member, *, reason = None):
     if ctx.author.guild_permissions.ban_members:
         if member == ctx.author:
             emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini banlayamazsın")
-            await ctx.send(emb)
+            await ctx.send(embed = emb)
         else:
             if reason == None:
                 emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan yasaklandı\n__sebep:__ belirtilmedi")
