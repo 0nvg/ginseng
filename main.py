@@ -29,7 +29,7 @@ async def ping(ctx):
 async def kick(ctx, member : discord.Member, *, reason = None):
     if ctx.author.guild_permissions.ban_members:
         if member == ctx.author:
-            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini banlayamazsın")
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini atamazsın")
             await ctx.send(embed = emb)
         else:
             if reason == None:
