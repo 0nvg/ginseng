@@ -5,7 +5,7 @@ from aiohttp import ClientSession
 import random
 import json
 from discord.ext import commands
-client = commands.Bot(command_prefix = ',', intents = discord.Intents.all())
+client = commands.Bot(command_prefix = ',', activity = discord.Streaming(name="discord.gg/aegean", url="https://twitch.tv/00xn"), status = discord.Status.online, intents = discord.Intents.all())
 if os.path.exists(os.getcwd() + "/token.json"):
     with open("./token.json") as f:
         conf = json.load(f)
@@ -28,29 +28,33 @@ async def ping(ctx):
 @client.command(name = 'kick')
 async def kick(ctx, member : discord.Member, *, reason = None):
     if ctx.author.guild_permissions.ban_members:
-        if reason == None:
-            emb1 = discord.Embed(color=0x2f3136, type='rich', description = f":white_check_mark: {member.mention} sunucudan atıldı\n__sebep:__ belirtilmedi")
-            emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için kick mesajı gönderilemedi")
-            dm = f"""**{ctx.guild.name}** sunucusundan atıldın\n__sebep:__ belirtilmedi"""
-            try:
-                await member.send(dm)
-                await member.kick(reason = reason)
-                await ctx.send(embed = emb1)
-            except:
-                await ctx.send(embed = emb1)
-                await member.kick(reason = reason)
-                await ctx.send(embed = emb2)
+        if member == ctx.author:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini banlayamazsın")
+            await ctx.send(emb)
         else:
-            emb = discord.Embed(color= 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan atıldı\n__sebep:__ {reason}")
-            dm = f"""**{ctx.guild.name}** sunucusundan atıldın\n__sebep:__ {reason}"""
-            try:
-                await member.send(dm)
-                await member.kick(reason = reason)
-                await ctx.send(embed = emb1)
-            except:
-                await ctx.send(embed = emb1)
-                await member.kick(reason = reason)
-                await ctx.send(embed = emb2)
+            if reason == None:
+                emb1 = discord.Embed(color=0x2f3136, type='rich', description = f":white_check_mark: {member.mention} sunucudan atıldı\n__sebep:__ belirtilmedi")
+                emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için kick mesajı gönderilemedi")
+                dm = f"""**{ctx.guild.name}** sunucusundan atıldın\n__sebep:__ belirtilmedi"""
+                try:
+                    await member.send(dm)
+                    await member.kick(reason = reason)
+                    await ctx.send(embed = emb1)
+                except:
+                    await ctx.send(embed = emb1)
+                    await member.kick(reason = reason)
+                    await ctx.send(embed = emb2)
+            else:
+                emb = discord.Embed(color= 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan atıldı\n__sebep:__ {reason}")
+                dm = f"""**{ctx.guild.name}** sunucusundan atıldın\n__sebep:__ {reason}"""
+                try:
+                    await member.send(dm)
+                    await member.kick(reason = reason)
+                    await ctx.send(embed = emb1)
+                except:
+                    await ctx.send(embed = emb1)
+                    await member.kick(reason = reason)
+                    await ctx.send(embed = emb2)
     else:
         emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: yetkin yok")
         await ctx.send(embed = emb)
@@ -58,30 +62,34 @@ async def kick(ctx, member : discord.Member, *, reason = None):
 @client.command(name = 'ban')
 async def ban(ctx, member : discord.Member, *, reason = None):
     if ctx.author.guild_permissions.ban_members:
-        if reason == None:
-            emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan yasaklandı\n__sebep:__ belirtilmedi")
-            emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için ban mesajı gönderilemedi")
-            dm = f"""**{ctx.guild.name}** sunucusundan yasaklandın\n__sebep:__ belirtilmedi"""
-            try:
-                await member.send(dm)
-                await member.ban(reason = reason)
-                await ctx.send(embed = emb1)
-            except:
-                await ctx.send(embed = emb1)
-                await member.ban(reason = reason)
-                await ctx.send(embed = emb2)
+        if member == ctx.author:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini banlayamazsın")
+            await ctx.send(emb)
         else:
-            emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan yasaklandı\n__sebep:__ {reason}")
-            emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için ban mesajı gönderilemedi")
-            dm = f"""**{ctx.guild.name}** sunucusundan yasaklandın\n__sebep:__ {reason}"""
-            try:
-                await member.send(dm)
-                await member.ban(reason = reason)
-                await ctx.send(embed = emb1)
-            except:
-                await ctx.send(embed = emb1)
-                await member.ban(reason = reason)
-                await ctx.send(embed = emb2)
+            if reason == None:
+                emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan yasaklandı\n__sebep:__ belirtilmedi")
+                emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için ban mesajı gönderilemedi")
+                dm = f"""**{ctx.guild.name}** sunucusundan yasaklandın\n__sebep:__ belirtilmedi"""
+                try:
+                    await member.send(dm)
+                    await member.ban(reason = reason)
+                    await ctx.send(embed = emb1)
+                except:
+                    await ctx.send(embed = emb1)
+                    await member.ban(reason = reason)
+                    await ctx.send(embed = emb2)
+            else:
+                emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} sunucudan yasaklandı\n__sebep:__ {reason}")
+                emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için ban mesajı gönderilemedi")
+                dm = f"""**{ctx.guild.name}** sunucusundan yasaklandın\n__sebep:__ {reason}"""
+                try:
+                    await member.send(dm)
+                    await member.ban(reason = reason)
+                    await ctx.send(embed = emb1)
+                except:
+                    await ctx.send(embed = emb1)
+                    await member.ban(reason = reason)
+                    await ctx.send(embed = emb2)
     else:
         emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: yetkin yok")
         await ctx.send(embed = emb)
@@ -163,5 +171,14 @@ async def ptgh(ctx):
     emb.set_footer(text = f"r/picsthatgohard")
     await ctx.send(embed = emb)
 
+@client.command(name = 'sil', aliases = ['del', 's', 'delete', 'clr', 'clear', 'purge'])
+async def sil(ctx, amount = 1):
+    if ctx.author.guild_permissions.administrator:
+        emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {amount} adet mesaj temizlendi.")
+        await ctx.channel.purge(limit = amount + 1)
+        await ctx.send(embed = emb)
+    else:
+        emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: yetkin yok")
+        await ctx.send(embed = emb)
 
 client.run(token)
