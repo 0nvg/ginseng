@@ -1,6 +1,5 @@
 import os
 import discord
-import datetime
 import asyncpraw
 import asyncio
 from aiohttp import ClientSession
@@ -44,12 +43,10 @@ async def on_message_delete(ctx):
     smc = ctx.content
     sma = ctx.author
     smav = ctx.author.avatar
-    smt = ctx.created_at
     await asyncio.sleep(60)
     sma = None
     smc = None
     smav = None
-    smt = None
 
 @client.command(name = 'cmds', aliases = ['cmd', 'command', 'commands'])
 async def help(ctx):
@@ -234,7 +231,6 @@ async def snipe(ctx):
         emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: son 60 saniyede silinen bir mesaj yok")
         await ctx.send(embed = emb)
     else:
-        ts = datetime.now() 
         emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f"{smc}")
         emb.set_footer(text = f"{sma} tarafından", icon_url = f"{smav}")
         await ctx.send(embed = emb)
