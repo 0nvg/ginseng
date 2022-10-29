@@ -1,4 +1,5 @@
 import os
+from webbrowser import get
 import discord
 import asyncpraw
 import asyncio
@@ -60,12 +61,15 @@ async def ping(ctx):
 
 @client.command(name = 'kick')
 async def kick(ctx, member : discord.Member = None, *, reason = None):
-    if ctx.author.guild_permissions.ban_members:
+    if ctx.author.guild_permissions.kick_members:
         if member == ctx.author:
             emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini atamazsın")
             await ctx.send(embed = emb)
         elif member == None:
             emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: atılacak kişiyi yazmalısın")
+            await ctx.send(embed = emb)
+        elif member.top_role >= ctx.author.top_role:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: rolü senle aynı veya senden yüksek olan kişileri atamazsın")
             await ctx.send(embed = emb)
         else:
             if reason == None:
@@ -99,10 +103,13 @@ async def kick(ctx, member : discord.Member = None, *, reason = None):
 async def ban(ctx, member : discord.Member = None, *, reason = None):
     if ctx.author.guild_permissions.ban_members:
         if member == ctx.author:
-            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini banlayamazsın")
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendini yasaklayamazsın")
             await ctx.send(embed = emb)
         elif member == None:
             emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: banlanacak kişiyi yazmalısın")
+            await ctx.send(embed = emb)
+        elif member.top_role >= ctx.author.top_role:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: rolü senle aynı veya senden yüksek olan kişileri yasaklayamazsın")
             await ctx.send(embed = emb)
         else:
             if reason == None:
@@ -230,8 +237,53 @@ async def snipe(ctx):
     if smc == None:
         emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: son 60 saniyede silinen bir mesaj yok")
         await ctx.send(embed = emb)
+    elif ctx.embeds:
+        emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: embed mesajların içeriklerini yükleyemiyorum")
+        await ctx.send(embed = emb)
     else:
         emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f"{smc}")
         emb.set_footer(text = f"{sma} tarafından", icon_url = f"{smav}")
         await ctx.send(embed = emb)
+
+@client.command(name = 'mute', pass_context = True)
+async def mute(ctx, *, member: discord.Member = None, reason = None):
+    if ctx.author.guild_permissions.manage_roles:
+        if member == ctx.author:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: kendine mute atamazsın")
+            await ctx.send(embed = emb)
+        elif member == None:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: mute atılacak kişiyi yazmalısın")
+            await ctx.send(embed = emb)
+        elif member.top_role >= ctx.author.top_role:
+            emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: rolü senle aynı veya senden yüksek olan kişilere mute atamazsın")
+            await ctx.send(embed = emb)
+        else:
+            if reason == None:
+                emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} mute yedi\n__sebep:__ belirtilmedi")
+                emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için mute mesajı gönderilemedi")
+                dm = f"""**{ctx.guild.name}** sunucusunda susturuldun\n__sebep:__ belirtilmedi"""
+                try:
+                    await member.send(dm)
+                    await member.add_roles(roles = int(1032259022625185802), reason = reason)
+                    await ctx.send(embed = emb1)
+                except:
+                    await ctx.send(embed = emb1)
+                    await member.add_roles(roles = int(1032259022625185802), reason = reason)
+                    await ctx.send(embed = emb2)
+            else:
+                emb1 = discord.Embed(color = 0x2f3136, type = 'rich', description = f":white_check_mark: {member.mention} mute yedi\n__sebep:__ {reason}")
+                emb2 = discord.Embed(color = 0x2f3136, type = 'rich', description = f"kullanıcının dm'leri kapalı olduğu için mute mesajı gönderilemedi")
+                dm = f"""**{ctx.guild.name}** sunucusunda susturuldun\n__sebep:__ {reason}"""
+                try:
+                    await member.send(dm)
+                    await member.add_roles(roles = int(1032259022625185802), reason = reason)
+                    await ctx.send(embed = emb1)
+                except:
+                    await ctx.send(embed = emb1)
+                    await member.add_roles(roles = int(1032259022625185802), reason = reason)
+                    await ctx.send(embed = emb2)
+    else:
+        emb = discord.Embed(color = 0x2f3136, type = 'rich', description = f":x: yetkin yok")
+        await ctx.send(embed = emb)
+
 client.run(token)
